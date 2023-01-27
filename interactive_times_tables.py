@@ -2,7 +2,7 @@ import os
 import random
 
 def ClearScreen():
-    os.system(clear)
+    os.system('clear')
 
 
 user_input = 0
