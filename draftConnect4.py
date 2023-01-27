@@ -31,11 +31,30 @@ def place_a_token(token, column):
 # checks whether a player has won:
 def check_horizontal_win():
     for row in board:
-        for token in [token for token in row if token != "-"]:
+        for token in [token for token in row if token != 0]:
             if row.count(token) > 3:    # checking for more than 3 duplicates
                 print("Player has won!")
                 return False
             return True
+        
+#def check_vertical_win(column):
+    for row in board:
+        if board[0][column] == board[:-1][column]:
+            pass
+
+#def check_diagonal_left(column, board):
+    col = range(len(column))
+    for row in board:
+        if board[-1][-1] == board[:-1][col]:
+            return True
+        return False
+
+#def check_diagonal_right(column, board):
+    col = range(len(column))    # column is undefinied, maybe row[i] = col?
+    for row in board:
+        if board[-1][0] == board[-1:][col]:
+            return True
+        return False     
 
 def player_not_won():
         check_horizontal_win()
@@ -50,6 +69,7 @@ while True:
     p1 = int(choose_a_column) - 1
     place_a_token(1, p1)
     print_game_board()
+    print()
     player_not_won()
     if not place_a_token(1, p1):
         continue                    # goes to the top of the while loop: asks for an input again
@@ -62,32 +82,6 @@ while True:
 
 '''
 bugs so far:
-- printing: Player has won, when player has not won
+- not recognising a win
 - computer is putting in 2 tokens every turn, one X and one O
-'''
-
-'''
-
-def check_vertical_win():
-    for row in board:
-        if board[0][column] = board[:-1][column]
-
-def check_diagonal_left():
-    col = range(len(column))
-    for row in board:
-        if board[-1][-1] = board[:-1][col]:
-            return True
-        return False
-
-check_diagonal_right()
-    col = range(len(column))    # column is undefinied, maybe row[i] = col?
-    for row in board:
-        if board[-1][0] = board[-1:][col]:
-            return True
-        return False     
-  
-(board[-1][0] = board[-2][1] = board[-3][2] = board[-4][3])
-
-
-
 '''
