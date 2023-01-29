@@ -39,19 +39,23 @@ def check_horizontal_win(board):
 
 # if board is bigger, it will return True - need to think of a way that will recognise that the counters are next to each other, not: [0,1,1,1,2,1,0,0]
         
-#def check_vertical_win(column):
-    # for row in board:
-    #     if board[0][column] == board[:-1][column]:
-    #         pass
+def check_vertical_win(board):
+    for column in board[0]:
+        print(column)
+    for column in board[1]:
+        print(column)
+        if 
+check_vertical_win(board)
 
-#def check_diagonal_left(column, board):
+
+#def check_diagonal_left(board):
     # col = range(len(column))
     # for row in board:
     #     if board[-1][-1] == board[:-1][col]:
     #         return True
     #     return False
 
-#def check_diagonal_right(column, board):
+#def check_diagonal_right(board):
     # col = range(len(column))    # column is undefinied, maybe row[i] = col?
     # for row in board:
     #     if board[-1][0] == board[-1:][col]:
@@ -60,9 +64,9 @@ def check_horizontal_win(board):
 
 def player_won():
         return check_horizontal_win(board)
-        #check_vertical_win()
-        #check_diagonal_left()
-        #check_diagonal_right()``
+        #check_vertical_win(board)
+        #check_diagonal_left(board)
+        #check_diagonal_right(board)
 
 # the main game:
 if __name__ == "__main__":

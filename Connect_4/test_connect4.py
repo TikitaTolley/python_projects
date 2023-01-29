@@ -1,5 +1,5 @@
 
-from Connect_4.draftConnect4 import *
+from Connect_4.Connect4 import *
 
 def test_demo():
     assert 3 != 2
