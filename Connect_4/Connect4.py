@@ -1,6 +1,6 @@
 import random
 
-board = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
+board = [[1,0,0,0], [1,0,0,0], [1,0,0,0], [1,0,0,0]]
 
 def print_game_board():
     for row in board:
@@ -40,13 +40,21 @@ def check_horizontal_win(board):
 # if board is bigger, it will return True - need to think of a way that will recognise that the counters are next to each other, not: [0,1,1,1,2,1,0,0]
         
 def check_vertical_win(board):
-    for column in board[0]:
-        print(column)
-    for column in board[1]:
-        print(column)
-        if 
+    el_0 = list(list(zip(*board))[0])
+    el_1 = list(list(zip(*board))[1])
+    el_2 = list(list(zip(*board))[2])
+    el_3 = list(list(zip(*board))[3])
+    print(el_0,el_1,el_2,el_3)          # printing out the columns
+    added = sum(el_0)
+    if added == 4:
+        print("PLayer 1 has won!")
+        return True
+    elif added == 8:
+        print("Player 2 has won!")
+        return True
+    else:
+        return False
 check_vertical_win(board)
-
 
 #def check_diagonal_left(board):
     # col = range(len(column))
