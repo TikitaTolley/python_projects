@@ -19,26 +19,25 @@ Input: scores = [1,2,3,5], ages = [8,9,10,1]
 Output: 6
 Explanation: It is best to choose the first 3 players. 
 '''
-import itertools
 
 scores = [4,5,6,5]
 ages = [2,1,2,1]
 
 def bestTeamScore():
-
-    for x,y in itertools.combinations(scores, 2):
-        print(min(x,y))
-    for a,b in itertools.combinations(ages, 2):
-        print(max(a,b))
-
-    '''
-    for a in ages:
-        for s in scores:
-            if s < s+1 and a > a+1:
-                score.remove(s)
-                
     total_score = 0
-    for s in scores:
+    zipped = zip(ages, scores)
+    zipped = list(zipped)
+    print(zipped)
+    res = sorted(zipped, key=lambda x: x[0])    # list with ages in ascending order
+    print(res)
+    a, sc = list(zip(*res))
+    print(a, sc)
+    smallest_score = min(sc)
+    for n in sc():
+        if n[0:] == smallest_score:
+            sc.remove(n)
+    for s in sc:
         total_score += s
     return total_score
-    '''
+
+bestTeamScore()
