@@ -46,25 +46,21 @@ def check_vertical_win(board):
                 print("Player has won!")
                 return True
     return False
-check_vertical_win(board)
 
-#def check_diagonal_left(board):
-    # col = range(len(column))
-    # for row in board:
-    #     if board[-1][-1] == board[:-1][col]:
-    #         return True
-    #     return False
+def check_diagonal_left(board):
+    rows = range(len(board) - 3)
+    cols = range(3, len(board[0]))
+    checkable_tokens = [(r, c) for r in rows for c in cols]  # [(0, 3)] [(0,3),(0,4),(1,3),(1,4)]
+    for r, c in checkable_tokens:
+        if board[r][c] != 0 and board[r][c]==board[r+1][c-1] and board[r][c]==board[r+2][c-2] and board[r][c]==
 
-#def check_diagonal_right(board):
-    # col = range(len(column))    # column is undefinied, maybe row[i] = col?
-    # for row in board:
-    #     if board[-1][0] == board[-1:][col]:
-    #         return True
-    #     return False     
+def check_diagonal_right(board):
+    pass
 
 def player_won():
-        return check_horizontal_win(board)
-        #check_vertical_win(board)
+        if check_horizontal_win(board) or check_vertical_win(board) or pass:
+            return True
+        return False
         #check_diagonal_left(board)
         #check_diagonal_right(board)
 
