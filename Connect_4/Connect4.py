@@ -1,6 +1,6 @@
 import random
 
-board = [[1,0,0,0], [1,0,0,0], [1,0,0,0], [1,0,0,0]]
+board = [[0 for x in range(4)] for y in range(6)]
 
 def print_game_board():
     for row in board:
@@ -12,7 +12,6 @@ def print_game_board():
             else:
                 print("-", end=" ")
         print()        
-
 
 # allows a player to place a token in the board:
 def place_a_token(token, column):
@@ -27,23 +26,27 @@ def place_a_token(token, column):
     board[-1][column] = token
     return True
 
-
 # checking if a player has won:
 def check_horizontal_win(board):
+    first_token_check = range(len(board[0])-3)
     for row in board:
-        for token in [token for token in row if token != 0]:
-            if row.count(token) > 3:    # checking for more than 3 duplicates
+        for token in first_token_check:
+            if row[token] != 0 and row[token]==row[token+1] and row[token]==row[token+2] and row[token]==row[token+3]:
                 print("Player has won!")
                 return True
     return False
-
-# if board is bigger, it will return True - need to think of a way that will recognise that the counters are next to each other, not: [0,1,1,1,2,1,0,0]
+        
         
 def check_vertical_win(board):
     columns = list(zip(*board))
+    first_token_check = range(len(columns[0])-3)
     for column in columns:
-            if column[0] != 0 and column[0]==column[1] and column[0]==column[2] and column[0]==column[3]:
-                print("Player has won!")
+        for token in first_token_check:
+            if column[token] != 0 and column[token]==column[token+1] and column[token]==column[token+2] and column[token]==column[token+3]:
+                if column[token] == 1:
+                    print("Player has won!")
+                else:
+                    print("neep boop")    
                 return True
     return False
 
@@ -52,17 +55,23 @@ def check_diagonal_left(board):
     cols = range(3, len(board[0]))
     checkable_tokens = [(r, c) for r in rows for c in cols]  # [(0, 3)] [(0,3),(0,4),(1,3),(1,4)]
     for r, c in checkable_tokens:
-        if board[r][c] != 0 and board[r][c]==board[r+1][c-1] and board[r][c]==board[r+2][c-2] and board[r][c]==
+        if board[r][c] != 0 and board[r][c]==board[r+1][c-1] and board[r][c]==board[r+2][c-2] and board[r][c]==board[r+3][c-3]:
+            return True
+    return False
 
 def check_diagonal_right(board):
-    pass
+    rows = range(len(board) - 3)
+    cols = range(len(board[0]) - 3)
+    checkable_tokens = [(r, c) for r in rows for c in cols]
+    for r, c in checkable_tokens:
+        if board[r][c] != 0 and board[r][c]==board[r+1][c+1] and board[r][c]==board[r+2][c+2] and board[r][c]==board[r+3][c+3]:
+            return True
+    return False
 
 def player_won():
-        if check_horizontal_win(board) or check_vertical_win(board) or pass:
+        if check_horizontal_win(board) or check_vertical_win(board) or check_diagonal_left(board) or check_diagonal_right(board):
             return True
         return False
-        #check_diagonal_left(board)
-        #check_diagonal_right(board)
 
 # the main game:
 if __name__ == "__main__":
