@@ -32,7 +32,10 @@ def check_horizontal_win(board):
     for row in board:
         for token in first_token_check:
             if row[token] != 0 and row[token]==row[token+1] and row[token]==row[token+2] and row[token]==row[token+3]:
-                print("Player has won!")
+                if row[token] == 1:
+                    print("Player has won!")
+                else:
+                    print("Computer has won!")  
                 return True
     return False
         
@@ -46,7 +49,7 @@ def check_vertical_win(board):
                 if column[token] == 1:
                     print("Player has won!")
                 else:
-                    print("neep boop")    
+                    print("Computer has won!")    
                 return True
     return False
 
@@ -56,6 +59,10 @@ def check_diagonal_left(board):
     checkable_tokens = [(r, c) for r in rows for c in cols]  # [(0, 3)] [(0,3),(0,4),(1,3),(1,4)]
     for r, c in checkable_tokens:
         if board[r][c] != 0 and board[r][c]==board[r+1][c-1] and board[r][c]==board[r+2][c-2] and board[r][c]==board[r+3][c-3]:
+            if board[r][c] == 1:
+                print("Player has won!")
+            else:
+                print("Computer has won!")
             return True
     return False
 
@@ -65,6 +72,10 @@ def check_diagonal_right(board):
     checkable_tokens = [(r, c) for r in rows for c in cols]
     for r, c in checkable_tokens:
         if board[r][c] != 0 and board[r][c]==board[r+1][c+1] and board[r][c]==board[r+2][c+2] and board[r][c]==board[r+3][c+3]:
+            if board[r][c] == 1:
+                print("Player has won!")
+            else:
+                print("Computer has won!")
             return True
     return False
 
