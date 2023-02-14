@@ -97,6 +97,7 @@ if __name__ == "__main__":
         else:
             input_token = random.randint(1, len(board[0]))
             p2 = input_token - 1
+            print()
             while not place_a_token(2, p2):
                 input_token = random.randint(1, len(board[0]))
                 p2 = input_token - 1
