@@ -38,6 +38,7 @@ def placing_counter(counter, col, board):
         board[0][col] = counter
     else:
         print("Column is full!")
+        return False
 
 
 print_board(board)
@@ -45,6 +46,18 @@ print_board(board)
 #if __main__ == True:
 def play():
     while True:
+        place_counter = input("Where would you like to place your counter? (column 1, 2 or 3?) ")   # indexed + 1 : column position
+        player_1 = int(place_counter) - 1
+        if placing_counter(1, player_1, board) == False:
+            print_board(board)
+            continue
+        else:
+            player_2 = random.randint(len(board)-1)
+            if placing_counter(2, player_2, board) == False:
+                print_board(board)
+                continue
 
-        place_counter = input("Where would you like to place your counter? (column 1, 2 or 3?) ")
-        player_1 = 
+play()
+
+print("Player has won!")
+
