@@ -2,9 +2,6 @@ import random
 
 board = [[0,0,0],[0,0,0],[0,0,0]]
 
-#PLAYER = O, 1
-#COMPUTER = X , 2
-
 def print_board(board):
     for row in board:
         print()
@@ -17,17 +14,56 @@ def print_board(board):
                 print("-", end=" ")
     
 
-def check_horizontal():
-    pass
+def check_horizontal(board):
+    for row in board:
+        if row[0] == 1:
+            if row[0] == row[1] == row[2]:
+                print("Player 1 has won!")
+                return False
+        if row[0] == 2:
+            if row[0] == row[1] == row[2]:
+                print("Player 2 has won!")
+                return False
 
-def check_vertical():
-    pass
 
-def diagonal_left():
-    pass
+def check_vertical(board):
+    column_lists = [list(x) for x in zip(*board)]   # list comprehension to make tuples into lists of columns
+    for column in column_lists:
+        if column[0] == 1:
+            if column[0] == column[1] == column[2]:
+                print("Player 1 has won!")
+                return False
+        if column[0] == 2:
+            if column[0] == column[1] == column[2]:
+                print("Player 2 has won!")
+                return False
 
-def diagonal_right():
-    pass
+
+def diagonal_right(board):
+    if board[0][0] == board[1][1] == board[2][2]:
+        if board[0][0] == 1:
+            print("Player 1 has won")
+            return False
+        elif board[0][0] == 2:
+            print("Player 2 has won!")
+            return False
+
+
+def diagonal_left(board):
+    if board[2][2] == board[1][1] == board[2][0]:
+        if board[0][0] == 1:
+            print("Player 1 has won")
+            return False
+        elif board[0][0] == 2:
+            print("Player 2 has won!")
+            return False
+
+
+def check_if_winner():
+    if check_horizontal(board) == False or check_vertical(board) == False or diagonal_left(board) == False or diagonal_right(board) == False:
+        return True
+    return False
+
 
 def placing_counter(counter, col, board):
     while True:    
@@ -44,25 +80,37 @@ def placing_counter(counter, col, board):
             print()
             print("Column is full!")
             return False
+        elif col < 0 or col > 2:
+            print()
+            print("This isn't a column in the board!")
+            return False
+        for row in board:
+            for space in row:
+                if space != 0:
+                    print()
+                    print("The board is full, you have drawn!")
+                    return False
 
 
-#if __main__ == True:
 def play():
     while True:
         print()
         print_board(board)
         place_counter = input("Where would you like to place your counter? (column 1, 2 or 3?) ")   # indexed + 1 : column position
         player_1 = int(place_counter) - 1
-        if placing_counter(1, player_1, board) == False:
-            continue
-        else:                                               # player 2's turn
+        if placing_counter(1, player_1, board):
+            if check_if_winner():
+                print_board(board)
+                break
+                                              # player 2's turn
             player_2 = random.randint(0, 2)
-            if placing_counter(2, player_2, board) == False:
+            while not placing_counter(2, player_2, board):
                 player_2 = random.randint(0, 2)
-                placing_counter(2, player_2, board)
-                continue
+                if check_if_winner():
+                    print_board(board)
+                    break
+
 
 play()
 
-print("Player has won!")
 
