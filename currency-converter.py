@@ -8,10 +8,11 @@ money = {'baht' : 41.46,
 def converting_currency():
     amount = input("How much would you like to convert? (write number:) £")
     currency_to = input("What currency would you like to convert to? (write word:) ").lower()       # key
-    for m in money:
-        if currency_to == m:
-            converted = amount*money[int(m)]
-    return converted
+    if currency_to in money:
+        converted = int(amount)*money[currency_to]
+        print(converted)
+    else:
+        return "Currency exchange not available!"
 
 
 converting_currency()
