@@ -1,53 +1,22 @@
-import emoji
-
-gun_range = [[0 for x in range (5)] for y in range (5)]
-
-def print_screen(screen):
-    print()
-    print("\033[0;35m   SPACE INVADERS")
-    for row in screen[0:2][::]:
-        print()
-        for mark in row:
-            if mark == 0:
-                print(emoji.emojize(' :alien_monster:'), end=' ')
-    for row in screen[2:4][::]:
-        print()
-        for mark in row:
-            if mark == 0:
-                print(' ', end=' ')
-    for row in screen[-1:][::]:
-        print()
-        for mark in row:
-            if mark == 0:
-                print('\033[1;30m - ', end=' ')
-    print()
-    print()
-
-
-print_screen(gun_range)
-
 import pygame
 
+
 W, H = 800, 600
-
-display = pygame.Surface((W, H))
-screen = pygame.display.set_mode((W, H))
-pygame.display.set_caption("coloured text")
-clock = pygame.time.Clock()
-
 black = (0, 0, 0)
 white = (255, 255, 255)
-
 col_spd = 1
 
 def_col = [[120, 120, 240]]
 col_dir = [[-1, 1, 1]]
 texts = ["SPACE INVADERS"]
 
+button = 0
+
 minimum = 0
 maximum = 255
 
-def draw_text(text, size, col, x, y):
+
+def draw_text(screen, text, size, col, x, y):
     font = pygame.font.SysFont('climate crisis',size)
     text_surface = font.render(text, True, col)
     text_rect = text_surface.get_rect()         # makes rectangle
@@ -60,33 +29,62 @@ def col_change(col, dir):
         if col[i] >= maximum or col[i] <= minimum:
             dir[i] *= -1
 
-def array_func(col, dir, text, size, x, y):
+def array_func(screen, col, dir, text, size, x, y):
     for i in range(len(col)):
-        draw_text(text[i], size, col[i], x, y + i*50)
+        draw_text(screen, text[i], size, col[i], x, y + i*50)
         col_change(col[i], dir[i])
 
-pygame.init()
 
-run = True
+def play():
 
-while run:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+    # INIT
+    pygame.init()
+    display = pygame.Surface((W, H))
+    screen = pygame.display.set_mode((W, H))
+    pygame.display.set_caption("space invaders")
+    clock = pygame.time.Clock()
+    characterX = [100,100]
+    characterY = [110,100]
 
-    screen.fill((0,0,0))
+    state = "OPENING"
+    run = True
+    fontIntro = pygame.font.SysFont("arial", 30)
+    score = 0
+    while run:
+        delta_t = clock.tick()
 
-    array_func(def_col, col_dir, texts, 40, W/2, H/5)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN and state == "OPENING":
+                state = "PLAY"
 
-    keys = pygame.key.get_pressed()
-    direction = pygame.Vector2(0,0)
-    if keys[pygame.K_LEFT]:
-        direction.x -= 1
+        screen.fill((0,0,0))
+        
+        
+
+        if state == "OPENING":
+            
+            array_func(screen, def_col, col_dir, texts, 80, W/2, H/5)
+            fontIntro = pygame.font.SysFont("arial", 30)
+            text = fontIntro.render("Click to play!", 1, (255,255,255))
+            screen.blit(text, (300,300,500,500))
+        elif state == "PLAY":
+            text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
+            screen.blit(text, (10,10,500,200))
+
+            character = pygame.draw.line(screen, white, characterX, characterY, 8)
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_LEFT]:
+                characterX[0] = characterX[0] - 3
+            if pressed[pygame.K_RIGHT]:
+                characterX[0] = characterX[0] + 3
+            
+            
+        display.blit(screen, (0,0))
+        pygame.display.update()
     
-    if keys[pygame.K_RIGHT]:
-            direction.x += 1
+    pygame.quit()
 
-    clock.tick()
-
-    display.blit(screen, (0,0))
-    pygame.display.update()
+if __name__ == "__main__":
+    play()
