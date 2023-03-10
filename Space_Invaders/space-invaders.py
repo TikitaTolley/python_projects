@@ -38,16 +38,32 @@ clock = pygame.time.Clock()
 black = (0, 0, 0)
 white = (255, 255, 255)
 
+col_spd = 1
+
+def_col = [[120, 120, 240]]
+col_dir = [[-1, 1, 1]]
+texts = ["SPACE INVADERS"]
+
+minimum = 0
+maximum = 255
+
 def draw_text(text, size, col, x, y):
-    font = pygame.font.get_default_font()
-    font = pygame.font.Font(font,size)
+    font = pygame.font.SysFont('climate crisis',size)
     text_surface = font.render(text, True, col)
     text_rect = text_surface.get_rect()         # makes rectangle
     text_rect.center = (x, y)                   # draws with coordinates
     screen.blit(text_surface, text_rect)
 
+def col_change(col, dir):
+    for i in range(3):
+        col[i] += col_spd * dir[i]
+        if col[i] >= maximum or col[i] <= minimum:
+            dir[i] *= -1
 
-
+def array_func(col, dir, text, size, x, y):
+    for i in range(len(col)):
+        draw_text(text[i], size, col[i], x, y + i*50)
+        col_change(col[i], dir[i])
 
 pygame.init()
 
@@ -58,7 +74,17 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    draw_text("preview text", 40, white, W / 2, H / 2)
+    screen.fill((0,0,0))
+
+    array_func(def_col, col_dir, texts, 40, W/2, H/5)
+
+    keys = pygame.key.get_pressed()
+    direction = pygame.Vector2(0,0)
+    if keys[pygame.K_LEFT]:
+        direction.x -= 1
+    
+    if keys[pygame.K_RIGHT]:
+            direction.x += 1
 
     clock.tick()
 
