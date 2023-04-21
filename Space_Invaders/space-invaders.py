@@ -80,12 +80,12 @@ def play():
                 alien_vel *= -1
             alien_startX += alien_vel
 
-            alien = pygame.image.load(os.path.join('img', 'green+transparantbackground.png'))
+            alien = pygame.image.load(os.path.join('img', 'green+transparantbackground.png')).convert_alpha()
             alien = pygame.transform.scale(alien, default_img_size)
             screen.blit(alien, (alien_startX, alien_startY))
             shooter = pygame.draw.line(screen, white, shooter_start_pos, shooter_end_pos, 8)
             bullet = pygame.draw.line(screen, (124,252,0), bullet_start_pos, bullet_end_pos, 8)
-
+            
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
                 shooter_start_pos[0] -= 1
@@ -101,6 +101,13 @@ def play():
                 bullet_start_pos[1] -= 20
                 bullet_end_pos[1] -= 20
 
+            alien_mask = pygame.mask.from_surface(alien)
+            bullet_mask = pygame.mask.from_surface(bullet)
+            # offset = (),()
+            if alien_mask.overlap(bullet_mask): # , offset
+                score += 1
+                # alien disappears
+                # bullet resets
 
         display.blit(screen, (0,0))
         pygame.display.update()
