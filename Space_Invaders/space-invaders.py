@@ -90,10 +90,13 @@ def play():
             if keys[pygame.K_LEFT]:
                 shooter_start_pos[0] -= 1
                 shooter_end_pos[0] -= 1
+                bullet_start_pos[0] -= 1
+                bullet_end_pos[0] -= 1
             if keys[pygame.K_RIGHT]:
                 shooter_start_pos[0] += 1
                 shooter_end_pos[0] += 1
-
+                bullet_start_pos[0] += 1
+                bullet_end_pos[0] += 1
             if keys[pygame.K_SPACE]:
                 bullet_start_pos[1] -= 20
                 bullet_end_pos[1] -= 20
