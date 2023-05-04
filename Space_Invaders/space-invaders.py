@@ -101,11 +101,11 @@ def play():
                 bullet_start_pos[1] -= 20
                 bullet_end_pos[1] -= 20
 
-            alien_mask = pygame.mask.from_surface(alien)
-            bullet_mask = pygame.mask.from_surface(bullet)
+            #alien_mask = pygame.mask.from_surface(alien)
+            #bullet_mask = pygame.mask.from_surface(bullet)
             # offset = (),()
-            if alien_mask.overlap(bullet_mask): # , offset
-                score += 1
+            #if alien_mask.overlap(bullet_mask): # , offset
+                #score += 1
                 # alien disappears
                 # bullet resets
 
