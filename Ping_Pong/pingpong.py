@@ -26,7 +26,11 @@ def play():
         screen.fill(black)
 
         text = font.render(f'Score: {player1_score} : {player2_score}', True, white)
-        screen.blit(text, (10,10,500,200))
+        screen.blit(text, (400,10,500,200))
+
+        player1 = pygame.draw.rect(screen, white, (90, 150, 10, 100))  # (left, top, width, height)
+
+        player2 = pygame.draw.rect(screen, white, (910, 150, 10, 100))
 
         display.blit(screen, (0,0))
         pygame.display.update()
