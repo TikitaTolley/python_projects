@@ -16,7 +16,7 @@ def draw_dashed_line(surf, color, start_pos, end_pos, width=1, dash_length=10):
         start = origin + (dash_amount *    index    * dash_length)
         print(start)
         end   = origin + (dash_amount * (index + 1) * dash_length)
-        pygame.draw.line(surf, color, (500, start), (500,end), width)
+    pygame.draw.line(surf, color, (500, start), (500,end), width)
 
 def play():
     pygame.init()
