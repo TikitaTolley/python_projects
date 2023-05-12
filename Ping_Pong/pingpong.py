@@ -74,7 +74,8 @@ def play():
 
         # ball movement and collisons:
         i = 10
-        if i > 0:
+        while i > 0:
+            i - 1
             print(i)
             if center_ball[1] >= 600 or center_ball[1] <= 0:    # hitting sides, bottom - top
                 #center_ball[0] += 1
@@ -96,17 +97,19 @@ def play():
             center_ball[0] -= 1
             #center_ball[1] += 1
 
-            i -= 1
 
         if i == 0:
-            display.blit(screen, (0,0))
+            screen.fill(black)
             if player1_score > player2_score:
                 winning1 = font.render('player 1 wins!', True, white)
                 screen.blit(winning1, (500,300,500,200))
             if player2_score > player1_score:
                 winning2 = font.render('player 2 wins!', True, white)
                 screen.blit(winning2, (500,300,500,200))
-        
+            if player1_score == player2_score:
+                winning3 = font.render('its a draw!', True, white)
+                screen.blit(winning3, (500,300,500,200))
+
         
         display.blit(screen, (0,0))
         pygame.display.update()
