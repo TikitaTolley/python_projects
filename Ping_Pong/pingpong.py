@@ -4,6 +4,7 @@ W, H = 1000, 600
 black = (0, 0, 0)
 white = (255, 255, 255)
 grey = (128, 128, 128)
+brown = (255,248,220)
 
 def draw_dashed_line(surf, color, start_pos, end_pos, width=1, dash_length=10):
     origin = start_pos[1]
@@ -34,17 +35,27 @@ def play():
     font = pygame.font.SysFont('arial', 30)
     dist_from_top = [150,150]
     center_ball = [W/2, H/2]
+    velocity = 10
+
+    counter, text = 10, '10'.rjust(3)
+    pygame.time.set_timer(pygame.USEREVENT, 1000)
 
     while run:
 
         for event in pygame.event.get():
+            if event.type == pygame.USEREVENT:
+                counter -= 1
+                text = str(counter).rjust(3) if counter > 0 else 'boom!'
             if event.type == pygame.QUIT:
                 run = False
 
         screen.fill(black)
 
-        text = font.render(f'Score: {player1_score} : {player2_score}', True, white)
-        screen.blit(text, (200,10,500,200))
+        score = font.render(f'Score: {player1_score} : {player2_score}', True, white)
+        screen.blit(score, (200,10,500,200))
+
+        time_left = font.render(f'Time Left: {text}', True, white)
+        screen.blit(time_left, (700,10,500,200))
 
         draw_dashed_line(screen, white, (500, 0), (500, 600))
 
@@ -71,8 +82,20 @@ def play():
 
         player1_dist_to_ball = line_length(center_ball, [920, dist_from_top[0] + 50])
         pygame.draw.line(screen, grey, center_ball, [920, dist_from_top[0] + 50])
-
+        
         # ball movement and collisons:
+
+        # calculate balls angle to the horizontal: (draw both lines, and angle)
+
+        # motion as velocity in angle's direction
+
+        # start of game: random ball angle
+
+        # bounce, opposite direction
+
+        #reset position torwards loser
+
+        '''
         i = 10
         while i > 0:
             i - 1
@@ -109,10 +132,11 @@ def play():
             if player1_score == player2_score:
                 winning3 = font.render('its a draw!', True, white)
                 screen.blit(winning3, (500,300,500,200))
-
+'''
         
         display.blit(screen, (0,0))
         pygame.display.update()
+        clock.tick(60)
 
     pygame.quit()
 
