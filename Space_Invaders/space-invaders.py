@@ -1,21 +1,16 @@
 import pygame
 import os
 
-
 W, H = 800, 600
 black = (0, 0, 0)
 white = (255, 255, 255)
 col_spd = 1
-
 def_col = [[120, 120, 240]]
 col_dir = [[-1, 1, 1]]
 texts = ["SPACE INVADERS"]
-
 button = 0
-
 minimum = 0
 maximum = 255
-
 
 def draw_text(screen, text, size, col, x, y):
     font = pygame.font.SysFont('climate crisis',size)
@@ -34,6 +29,12 @@ def surface(screen, col, dir, text, size, x, y):
     for i in range(len(col)):
         draw_text(screen, text[i], size, col[i], x, y + i*50)
         col_change(col[i], dir[i])
+
+def line_length(center, surface):
+    x1, y1 = center
+    x2, y2 = surface
+    length = (((x2-x1)**2)+((y2-y1)**2))**(1/2)
+    return length
 
 def play():
     pygame.init()
@@ -64,7 +65,6 @@ def play():
                 state = "PLAY"
 
         screen.fill((0,0,0))
-        
 
         if state == "OPENING":
             
@@ -80,7 +80,7 @@ def play():
                 alien_vel *= -1
             alien_startX += alien_vel
 
-            alien = pygame.image.load(os.path.join('img', 'green+transparantbackground.png')).convert_alpha()
+            alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
             alien = pygame.transform.scale(alien, default_img_size)
             screen.blit(alien, (alien_startX, alien_startY))
             shooter = pygame.draw.line(screen, white, shooter_start_pos, shooter_end_pos, 8)
@@ -101,13 +101,12 @@ def play():
                 bullet_start_pos[1] -= 20
                 bullet_end_pos[1] -= 20
 
-            #alien_mask = pygame.mask.from_surface(alien)
-            #bullet_mask = pygame.mask.from_surface(bullet)
-            # offset = (),()
-            #if alien_mask.overlap(bullet_mask): # , offset
-                #score += 1
-                # alien disappears
-                # bullet resets
+        alien_radius = line_length([alien_startX, alien_startY], [alien_startX, alien_startY + 10])
+        bullet_to_alien_center = line_length([alien_startX, alien_startY], [bullet_start_pos[0] + 10, bullet_start_pos[1]])
+
+        if bullet_to_alien_center == alien_radius:
+            score += 1
+        print(score)
 
         display.blit(screen, (0,0))
         pygame.display.update()
