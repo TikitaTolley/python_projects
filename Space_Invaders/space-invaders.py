@@ -103,10 +103,10 @@ def play():
 
         alien_radius = line_length([alien_startX, alien_startY], [alien_startX, alien_startY + 10])
         bullet_to_alien_center = line_length([alien_startX, alien_startY], [bullet_start_pos[0] + 10, bullet_start_pos[1]])
+        pygame.draw.line(screen, white, [alien_startX, alien_startY], [bullet_start_pos[0] + 10, bullet_start_pos[1]], 5)
 
-        if bullet_to_alien_center == alien_radius:
+        if bullet_to_alien_center <= alien_radius:
             score += 1
-        print(score)
 
         display.blit(screen, (0,0))
         pygame.display.update()
