@@ -87,12 +87,12 @@ def play():
             bullet = pygame.draw.line(screen, (124,252,0), bullet_start_pos, bullet_end_pos, 8)
             
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT] and shooter_start_pos[0] >100:
                 shooter_start_pos[0] -= 1
                 shooter_end_pos[0] -= 1
                 bullet_start_pos[0] -= 1
                 bullet_end_pos[0] -= 1
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RIGHT] and shooter_start_pos[0]<650:
                 shooter_start_pos[0] += 1
                 shooter_end_pos[0] += 1
                 bullet_start_pos[0] += 1
@@ -101,11 +101,14 @@ def play():
                 bullet_start_pos[1] -= 20
                 bullet_end_pos[1] -= 20
 
-        alien_radius = line_length([alien_startX, alien_startY], [alien_startX, alien_startY + 10])
-        bullet_to_alien_center = line_length([alien_startX, alien_startY], [bullet_start_pos[0] + 10, bullet_start_pos[1]])
-        pygame.draw.line(screen, white, [alien_startX, alien_startY], [bullet_start_pos[0] + 10, bullet_start_pos[1]], 5)
+        alien_height = line_length([alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40])
+        pygame.draw.line(screen, white, [alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40], 5)
 
-        if bullet_to_alien_center <= alien_radius:
+        bullet_to_alien_center = line_length([alien_startX + 25, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]])
+        pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
+        
+
+        if bullet_to_alien_center <= alien_height:
             score += 1
 
         display.blit(screen, (0,0))
