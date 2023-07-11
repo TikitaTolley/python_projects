@@ -37,6 +37,7 @@ def play():
     center_ball = [W/2, H/2]
     velocityX = 2
     velocityY = 2
+    last_hit = None
 
     counter, text = 10, '10'.rjust(3)
     pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -63,7 +64,7 @@ def play():
         milli_since_last_frame = clock.tick(30)    # rate of each frame
         ticks = pygame.time.get_ticks()     # gives time program's been running in milliseconds
         seconds = ticks/1000
-        print(seconds)                
+        #print(seconds)                
         posX, posY = center_ball
 
         # line connections (ball + paddle):
@@ -72,7 +73,7 @@ def play():
 
         player1_dist_to_ball = line_length([posX, posY], [920, dist_from_top[0] + 50])
         #pygame.draw.line(screen, grey, [posX, posY], [920, dist_from_top[0] + 50])
-
+        
         # basic movement and bouncing:
         if posY >= 600 or posY < 0:
             velocityY *= -1
@@ -80,16 +81,21 @@ def play():
         posX += velocityY
 
         # paddle-ball bouncing p1:
-        if player1_dist_to_ball <= 20:
-            velocityX *= -1
-            velocityY *= -1
+        if player1_dist_to_ball <= 100 and posX >= 900:
+            if last_hit != "player1":
+                velocityX *= -1
+                velocityY *= -1
+                last_hit = "player1"
         posX += velocityX
         posY += velocityY
+        print(player1_dist_to_ball, posX)
 
         # paddle-ball bouncing p2:
-        if player2_dist_to_ball <= 20:
-            velocityX *= -1
-            velocityY *= -1
+        if player2_dist_to_ball <= 100 and posX <= 90:
+            if last_hit != "player2":
+                velocityX *= -1
+                velocityY *= -1
+                last_hit = "player2"
         posX += velocityX
         posY += velocityY
 
