@@ -1,9 +1,11 @@
 import pygame
 import os
+from copy import copy
 
 W, H = 800, 600
 black = (0, 0, 0)
 white = (255, 255, 255)
+green = (124,252,0)
 col_spd = 1
 def_col = [[120, 120, 240]]
 col_dir = [[-1, 1, 1]]
@@ -36,6 +38,14 @@ def line_length(center, surface):
     length = (((x2-x1)**2)+((y2-y1)**2))**(1/2)
     return length
 
+def bullets(screen, color, bullet_start, bullet_end, width):
+    startY = bullet_start[1]
+    i = 0
+    while i < 100:
+        if startY > 500:
+            pygame.draw.line(screen, green, bullet_start, bullet_end, 8)
+            i += 1
+
 def play():
     pygame.init()
     display = pygame.Surface((W, H))
@@ -48,14 +58,19 @@ def play():
     alienY = -50
     default_img_size = (50,40)
     alien_vel = 1
-    bullet_start = [shooter_start[0]+7, shooter_start[1]]
-    bullet_end = [shooter_end[0]-7, shooter_end[1]]
+    bullet_start = [copy(shooter_start[0]+7), copy(shooter_start[1])]
+    bullet_end = [copy(shooter_end[0]-7), copy(shooter_end[1])]
+    bullets = []
+    hit = None
+    i = 0
 
     state = "OPENING"
     run = True
     fontIntro = pygame.font.SysFont("arial", 30)
     score = 0
+    press = False
     while run:
+        print(bullets)
         delta_t = clock.tick()
 
         for event in pygame.event.get():
@@ -83,13 +98,21 @@ def play():
             alienX += alien_vel
 
             # render alien:
-            alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
-            alien = pygame.transform.scale(alien, default_img_size)
-            screen.blit(alien, (alienX, alienY))
+            if hit != "player":
+                alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
+                alien = pygame.transform.scale(alien, default_img_size)
+                screen.blit(alien, (alienX, alienY))
 
             # render shooter & bullet:
             shooter = pygame.draw.line(screen, white, shooter_start, shooter_end, 8)
-            bullet = pygame.draw.line(screen, (124,252,0), bullet_start, bullet_end, 8)
+            bullet = pygame.draw.line(screen, green, bullet_start, bullet_end, 8)
+
+            for b in bullets:
+                b[1] += -0.1 * delta_t
+                if b[1] < 0:
+                    bullets.remove(b)
+                pygame.draw.line(screen, green, b, [b[0] + 7, b[1]+7], 8)
+
 
             # move shooter:
             keys = pygame.key.get_pressed()
@@ -103,23 +126,27 @@ def play():
                 shooter_end[0] += 1
                 bullet_start[0] += 1
                 bullet_end[0] += 1
-            if keys[pygame.K_SPACE]:
-                bullet_start[1] -= 20
-                bullet_end[1] -= 20
+            
+            if keys[pygame.K_SPACE] and not press:
+                bullets.append(copy(shooter_start))
+                press = True
+            if not keys[pygame.K_SPACE]: 
+                press = False
+
 
             # collisions:
 
             alien_height = line_length([alienX + 25, alienY], [alienX + 25, alienY + 40])
             #pygame.draw.line(screen, white, [alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40], 5)
 
-            bullet_to_alien_center = line_length([alienX + 25, alienY], [bullet_start[0] + 5, bullet_start[1]])
-            #pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
-            
-
-
-            # scoring => end game:
-            if bullet_to_alien_center <= alien_height:
-                score += 1
+            for b in bullets:
+                bullet_to_alien_center = line_length([alienX + 25, alienY], [b[0] + 5, b[1]])
+                #pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
+                
+                # scoring => end game:
+                if bullet_to_alien_center <= alien_height and hit != "player":
+                    score += 1
+                    hit = "player"
 
             aliens_win = 0
             if alienY >= 600:
