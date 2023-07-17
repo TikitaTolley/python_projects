@@ -42,16 +42,14 @@ def play():
     screen = pygame.display.set_mode((W, H))
     pygame.display.set_caption("space invaders")
     clock = pygame.time.Clock()
-    shooter_start_pos = [390,500]
-    shooter_end_pos = [410,500]
-    alien_startX = 100
-    alien_startY = -50
+    shooter_start = [390,500]
+    shooter_end = [410,500]
+    alienX = 100
+    alienY = -50
     default_img_size = (50,40)
     alien_vel = 1
-    bullet_start_pos = [shooter_start_pos[0]+7, shooter_start_pos[1]]
-    bullet_end_pos = [shooter_end_pos[0]-7, shooter_end_pos[1]]
-    new_alien = pygame.USEREVENT + 0
-    pygame.time.set_timer(new_alien, 3000)
+    bullet_start = [shooter_start[0]+7, shooter_start[1]]
+    bullet_end = [shooter_end[0]-7, shooter_end[1]]
 
     state = "OPENING"
     run = True
@@ -65,11 +63,6 @@ def play():
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN and state == "OPENING":
                 state = "PLAY"
-            #if event.type == new_alien and state == "PLAY":
-             #   alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
-              #  alien = pygame.transform.scale(alien, default_img_size)
-              #  screen.blit(alien, (alien_startX, alien_startY))
-
 
         screen.fill((0,0,0))
 
@@ -83,62 +76,53 @@ def play():
             text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
             screen.blit(text, (10,10,500,200))
 
-            if alien_startX >= 650 or alien_startX < 100:
+            # movement:
+            if alienX >= 650 or alienX < 100:
                 alien_vel *= -1
-                #alien_startY += 20
-            alien_startX += alien_vel
+                alienY += 20
+            alienX += alien_vel
 
-            #alien path:
-            alien_path = {
-                1: [99, -50],
-                2: [650, 0],
-                3: [650, 10],
-                4: [99, 30],
-                5: [650, 50],
-                6: [99, 70],
-                7: [650, 90],
-                8: [100, 110]
-            }
-
-            aliens = {}
+            # render alien:
             alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
             alien = pygame.transform.scale(alien, default_img_size)
-            screen.blit(alien, (alien_startX, alien_startY))
+            screen.blit(alien, (alienX, alienY))
 
+            # render shooter & bullet:
+            shooter = pygame.draw.line(screen, white, shooter_start, shooter_end, 8)
+            bullet = pygame.draw.line(screen, (124,252,0), bullet_start, bullet_end, 8)
 
-            shooter = pygame.draw.line(screen, white, shooter_start_pos, shooter_end_pos, 8)
-
-            
-            bullet = pygame.draw.line(screen, (124,252,0), bullet_start_pos, bullet_end_pos, 8)
-            bullets = {1: bullet, 2: bullet, 3: bullet}
-
+            # move shooter:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT] and shooter_start_pos[0] >100:
-                shooter_start_pos[0] -= 1
-                shooter_end_pos[0] -= 1
-                bullet_start_pos[0] -= 1
-                bullet_end_pos[0] -= 1
-            if keys[pygame.K_RIGHT] and shooter_start_pos[0]<650:
-                shooter_start_pos[0] += 1
-                shooter_end_pos[0] += 1
-                bullet_start_pos[0] += 1
-                bullet_end_pos[0] += 1
+            if keys[pygame.K_LEFT] and shooter_start[0] >100:
+                shooter_start[0] -= 1
+                shooter_end[0] -= 1
+                bullet_start[0] -= 1
+                bullet_end[0] -= 1
+            if keys[pygame.K_RIGHT] and shooter_start[0]<650:
+                shooter_start[0] += 1
+                shooter_end[0] += 1
+                bullet_start[0] += 1
+                bullet_end[0] += 1
             if keys[pygame.K_SPACE]:
-                bullet_start_pos[1] -= 20
-                bullet_end_pos[1] -= 20
+                bullet_start[1] -= 20
+                bullet_end[1] -= 20
 
-            alien_height = line_length([alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40])
-            pygame.draw.line(screen, white, [alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40], 5)
+            # collisions:
 
-            bullet_to_alien_center = line_length([alien_startX + 25, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]])
-            pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
+            alien_height = line_length([alienX + 25, alienY], [alienX + 25, alienY + 40])
+            #pygame.draw.line(screen, white, [alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40], 5)
+
+            bullet_to_alien_center = line_length([alienX + 25, alienY], [bullet_start[0] + 5, bullet_start[1]])
+            #pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
             
 
+
+            # scoring => end game:
             if bullet_to_alien_center <= alien_height:
                 score += 1
 
             aliens_win = 0
-            if alien_startY >= 600:
+            if alienY >= 600:
                 aliens_win += 1
             if aliens_win == 3:
                 display.blit(screen, (0,0))
