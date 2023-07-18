@@ -24,7 +24,7 @@ aliens = []
 for a in range(10):
     alien = {'image': os.path.join('Space_Invaders/img', 'green+transparantbackground.png'),
              'pos': [100 + (50 * a), -50],
-             'velocity': 20}
+             'velocity': 1}
     aliens.append(alien)
  
 def draw_text(screen, text, size, col, x, y):
@@ -96,7 +96,6 @@ def play():
         elif state == "PLAY":
             text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
             screen.blit(text, (10,10,500,200))
-
             # render shooter:
             pygame.draw.line(screen, white, shooter_start, shooter_end, 8) #shooter
 
@@ -133,7 +132,7 @@ def play():
                     alien['velocity'] *= -1
                     alien['pos'][1] += 50
                 # Movement
-                alien['pos'][0] += alien['velocity'] * delta_t
+                alien['pos'][0] += alien['velocity'] * 5
 
                 # Collision Check    
                 for b in bullets:
@@ -158,7 +157,7 @@ def play():
             display.blit(screen, (0,0))
             text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
             screen.blit(text, (100,300,500,200))
-            text = fontIntro.render(f'Press space to continue: {score}', True, (255, 255, 255))
+            text = fontIntro.render(f'Press space to continue!', True, (255, 255, 255))
             screen.blit(text, (100,400,500,300))
             
             keys = pygame.key.get_pressed()
