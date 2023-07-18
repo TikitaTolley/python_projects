@@ -14,20 +14,19 @@ col_spd = 1
 def_col = [[120, 120, 240]]
 col_dir = [[-1, 1, 1]]
 texts = ["SPACE INVADERS"]
-default_img_size = (50,40)
+default_img_size = (30,40)
 button = 0
 minimum = 0
 maximum = 255
 
-alienImg = []
-alienX = 100
-alienY = -50
-no_of_aliens = 10
-for a in range(no_of_aliens):
-    alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
-    alien = pygame.transform.scale(alien, default_img_size)
-    alienImg.append(alien)
-
+aliens = []
+''' Create new Aliens '''
+for a in range(10):
+    alien = {'image': os.path.join('Space_Invaders/img', 'green+transparantbackground.png'),
+             'pos': [100 + (50 * a), -50],
+             'velocity': 20}
+    aliens.append(alien)
+ 
 def draw_text(screen, text, size, col, x, y):
     font = pygame.font.SysFont('climate crisis',size)
     text_surface = font.render(text, True, col)
@@ -52,20 +51,21 @@ def line_length(center, surface):
     length = (((x2-x1)**2)+((y2-y1)**2))**(1/2)
     return length
 
-def aliens(x, y, i):
-    screen.blit(alienImg[i], (x, y))
+def draw_alien(alien):
+    image = alien['image']
+    pos   = alien['pos']
+    image = pygame.image.load(image).convert_alpha()
+    image = pygame.transform.scale(image, default_img_size)
+    screen.blit(image, pos)
 
 def play():
     pygame.display.set_caption("space invaders")
     clock = pygame.time.Clock()
     shooter_start = [390,500]
     shooter_end = [410,500]
-    alien_vel = 1
     bullet_start = [copy(shooter_start[0]+7), copy(shooter_start[1])]
     bullet_end = [copy(shooter_end[0]-7), copy(shooter_end[1])]
     bullets = []
-    global alienX
-    global alienY
     hit = None
     visible = False
 
@@ -73,9 +73,10 @@ def play():
     run = True
     fontIntro = pygame.font.SysFont("arial", 30)
     score = 0
+    aliens_win = 0
     press = False
+    print(aliens)
     while run:
-        print(len(alienImg))
         delta_t = clock.tick()
 
         for event in pygame.event.get():
@@ -96,21 +97,11 @@ def play():
             text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
             screen.blit(text, (10,10,500,200))
 
-            '''
-            # render alien:
-            if hit != "player":
-                alien = pygame.image.load(os.path.join('Space_Invaders/img', 'green+transparantbackground.png')).convert_alpha()
-                alien = pygame.transform.scale(alien, default_img_size)
-                aliens.append([alienX, alienY])
-                screen.blit(alien, (alienX, alienY))
-            '''
-
-            # render shooter & bullet:
-            shooter = pygame.draw.line(screen, white, shooter_start, shooter_end, 8)
-            bullet = pygame.draw.line(screen, green, bullet_start, bullet_end, 8)
+            # render shooter:
+            pygame.draw.line(screen, white, shooter_start, shooter_end, 8) #shooter
 
             for b in bullets:
-                b[1] += -0.1 * delta_t
+                b[1] += -0.4 * delta_t
                 if b[1] < 0:
                     bullets.remove(b)
                 pygame.draw.line(screen, green, b, [b[0] + 7, b[1]+7], 8)
@@ -136,36 +127,42 @@ def play():
 
 
             # collisions:
-            for i in range(no_of_aliens):
-                alien_height = line_length([alienX + 25, alienY], [alienX + 25, alienY + 40])
-                #pygame.draw.line(screen, white, [alien_startX + 25, alien_startY], [alien_startX + 25, alien_startY + 40], 5)
+            for alien in aliens:
+                # Bounce at edge
+                if alien['pos'][0] >= 650 or alien['pos'][0] < 100:
+                    alien['velocity'] *= -1
+                    alien['pos'][1] += 50
+                # Movement
+                alien['pos'][0] += alien['velocity'] * delta_t
 
+                # Collision Check    
                 for b in bullets:
-                    bullet_to_alien_center = line_length([alienX + 25, alienY], [b[0] + 5, b[1]])
-                    #pygame.draw.line(screen, white, [alien_startX + 30, alien_startY], [bullet_start_pos[0] + 5, bullet_start_pos[1]], 5)
-                
-                    # scoring => end game:
-                    # movement:
-                    if alienX >= 650 or alienX < 100:
-                        alien_vel *= -1
-                        alienY += 20
-                    alienX += alien_vel
-                    if bullet_to_alien_center <= alien_height and hit != "player":
+                    bullet_to_alien_center = line_length(alien['pos'], b)
+                    if bullet_to_alien_center < 10:
                         score += 1
-                        hit = "player"
-                    if alienY > 100 and visible != True:    # delay for each alien
-                        aliens(alienX, alienY, i)
-                        visible = True
+                        aliens.remove(alien)
+                        bullets.remove(b)
+                        break
                 
+                # Win check 
+                if alien['pos'][1] > 600:
+                    aliens_win += 1
+                    aliens.remove(alien)
+                
+                draw_alien(alien)
 
-            aliens_win = 0
-            if alienY >= 600:
-                aliens_win += 1
-            if aliens_win == 3:
-                display.blit(screen, (0,0))
-                text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
-                screen.blit(text, (100,300,500,200))
-                pygame.time.delay(5000)
+            if aliens_win >= 3:
+                state = 'GAME OVER'
+
+        elif state == 'GAME OVER':
+            display.blit(screen, (0,0))
+            text = fontIntro.render(f'Score: {score}', True, (255, 255, 255))
+            screen.blit(text, (100,300,500,200))
+            text = fontIntro.render(f'Press space to continue: {score}', True, (255, 255, 255))
+            screen.blit(text, (100,400,500,300))
+            
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
                 state = 'OPENING'
 
         display.blit(screen, (0,0))
